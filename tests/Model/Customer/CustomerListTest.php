@@ -591,6 +591,114 @@ class CustomerListTest extends ModelTestCase
         $modifiedListing = $handler->getListing();
         $this->assertEquals(0, $modifiedListing->getCount());
 
+        // begin hereeee
+
+        $listing = new Customer\Listing();
+        $handler = new FilterHandler($listing);
+
+        $searchFilter = new SearchQuery(['firstname'], '"jane"');
+        $handler->addFilter ($searchFilter);
+
+        $modifiedListing = $handler->getListing ();
+        $this->assertEquals (1, $modifiedListing->getCount ());
+
+        $listing = new Customer\Listing();
+        $handler = new FilterHandler($listing);
+
+        $searchFilter = new SearchQuery(['firstname', 'lastname'], '"jane"');
+        $handler->addFilter ($searchFilter);
+
+        $modifiedListing = $handler->getListing ();
+        $this->assertEquals (1, $modifiedListing->getCount ());
+
+        $listing = new Customer\Listing();
+        $handler = new FilterHandler($listing);
+
+        $searchFilter = new SearchQuery(['firstname'], '"jan" OR "sam"');
+        $handler->addFilter ($searchFilter);
+
+        $modifiedListing = $handler->getListing ();
+        $this->assertEquals (2, $modifiedListing->getCount ());
+
+        $listing = new Customer\Listing();
+        $handler = new FilterHandler($listing);
+
+        $searchFilter = new SearchQuery(['firstname', 'lastname'], '"jan" OR "sam"');
+        $handler->addFilter ($searchFilter);
+
+        $modifiedListing = $handler->getListing ();
+        $this->assertEquals (2, $modifiedListing->getCount ());
+
+        $listing = new Customer\Listing();
+        $handler = new FilterHandler($listing);
+
+        $searchFilter = new SearchQuery(['firstname'], '"jane" AND "sam"');
+        $handler->addFilter ($searchFilter);
+
+        $modifiedListing = $handler->getListing ();
+        $this->assertEquals (0, $modifiedListing->getCount ());
+
+        $listing = new Customer\Listing();
+        $handler = new FilterHandler($listing);
+
+        $searchFilter = new SearchQuery(['firstname', 'lastname'], '"peter" AND "john"');
+        $handler->addFilter ($searchFilter);
+
+        $modifiedListing = $handler->getListing ();
+        $this->assertEquals (0, $modifiedListing->getCount ());
+
+
+        $listing = new Customer\Listing();
+        $handler = new FilterHandler($listing);
+
+        $searchFilter = new SearchQuery(['firstname', 'lastname'], '"peter" AND "hugo"');
+        $handler->addFilter ($searchFilter);
+
+        $modifiedListing = $handler->getListing ();
+        $this->assertEquals (1, $modifiedListing->getCount ());
+
+        $listing = new Customer\Listing();
+        $handler = new FilterHandler($listing);
+
+        $searchFilter = new SearchQuery(['email'], '"jane.doe@pimcore.fun" AND !"john.doe@pimcore.fun"');
+        $handler->addFilter ($searchFilter);
+
+        $modifiedListing = $handler->getListing ();
+        $this->assertEquals (4, $modifiedListing->getCount ());
+
+
+        $listing = new Customer\Listing();
+        $handler = new FilterHandler($listing);
+
+        $searchFilter = new SearchQuery(['firstname', 'lastname', 'email'], '"jane.doe@pimcore.fun" AND !"john.doe@pimcore.fun"');
+        $handler->addFilter ($searchFilter);
+
+        $modifiedListing = $handler->getListing ();
+        $this->assertEquals (4, $modifiedListing->getCount ());
+
+
+        $listing = new Customer\Listing();
+        $handler = new FilterHandler($listing);
+
+        $searchFilter = new SearchQuery(['email'], '("jane.doe@pimcore.fun" AND !"john.doe@pimcore.fun") OR "sophie.fischer@pimcore.fun"');
+        $handler->addFilter ($searchFilter);
+
+        $modifiedListing = $handler->getListing ();
+        $this->assertEquals (5, $modifiedListing->getCount ());
+
+
+        $listing = new Customer\Listing();
+        $handler = new FilterHandler($listing);
+
+        $searchFilter = new SearchQuery(['firstname', 'lastname', 'email'], '("jane.doe@pimcore.fun" AND !"john.doe@pimcore.fun") OR "sophie.fischer@pimcore.fun"');
+        $handler->addFilter ($searchFilter);
+
+        $modifiedListing = $handler->getListing ();
+        $this->assertEquals (5, $modifiedListing->getCount ());
+
+        // ends here
+
+
     }
 
     public function testCombinedSearchQueryFilter()
